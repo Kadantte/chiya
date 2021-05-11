@@ -21,7 +21,23 @@ class TrackerStatus(Cog):
     @commands.command(name='status', aliases=["ts", "trackerstatus"])
     async def tracker_status(self, ctx: Context, tracker: str):
         """ Returns the status of a private tracker, currently accepts: AR, BTN, GGn, MTV, PTP, RED, and OPS. """
+        
+        tracker_name_aliases = {
+            'AlphaRatio' : ['ar', 'alpharatio', 'alpharatio.cc'],
+            'BroadcasTheNet' : ['btn', 'broadcasthenet', 'broadcasthe.net'],
+            'GazelleGames' : ['ggn', 'gazellegames', 'gazellegames.net'],
+            'MoreThanTV' : ['mtv', 'morethantv', 'morethantv.me'],
+            'PassThePopcorn' : ['ptp', 'passthepopcorn', 'passthepopcorn.me'],
+            'Redacted' : ['red', 'redacted', 'redacted.ch'],
+            'Orpheus' : ['ops', 'orpheus', 'orpheus.network']
+        }
+        
         tracker = tracker.lower()
+
+        for key in tracker_name_aliases:
+            if tracker == key.lower() or tracker in tracker_name_aliases[key]:
+                tracker = key
+                break
 
         # A list of the TrackerStatus.info APIs to query
         tracker_status_apis = {
