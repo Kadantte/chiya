@@ -22,6 +22,7 @@ class TrackerStatus(Cog):
     async def tracker_status(self, ctx: Context, tracker: str):
         """ Returns the status of a private tracker, currently accepts: AR, BTN, GGn, MTV, PTP, RED, and OPS. """
         
+        # tracker name aliases, recognition is case-insensitive and exact spelling.
         tracker_name_aliases = {
             'AlphaRatio' : ['ar', 'alpharatio', 'alpharatio.cc'],
             'BroadcasTheNet' : ['btn', 'broadcasthenet', 'broadcasthe.net'],
@@ -32,6 +33,7 @@ class TrackerStatus(Cog):
             'Orpheus' : ['ops', 'orpheus', 'orpheus.network']
         }
         
+        # lowercasing to avoid the issue of adding a LOT of aliases.
         tracker = tracker.lower()
 
         for key in tracker_name_aliases:
@@ -56,7 +58,11 @@ class TrackerStatus(Cog):
         }
 
         # Query the relevant trackers API and return the JSON response
-        r = requests.get(tracker_status_apis[tracker])
+        try:
+            r = requests.get(tracker_status_apis[tracker])
+        except KeyError:
+            await embeds.error_message(ctx, "The specified term isn't a recognized tracker name or alias.")
+            return
         json = r.json()
 
         # Create the embed to send 
